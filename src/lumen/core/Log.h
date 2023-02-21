@@ -6,4 +6,6 @@ namespace lumen::core {
 
 void initLogger();
 
+#define LASSERT(x) ASSERT(x, "Assertion failed {}:{} - {}(...)", __FILE__, __LINE__, __func__)
+
 }  // namespace lumen::core
