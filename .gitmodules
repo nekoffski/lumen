@@ -1,0 +1,4 @@
+[submodule "vendor/libkc"]
+	path = vendor/libkc
+	url = https://github.com/nekoffski/libkc.git
+    branch = dev
