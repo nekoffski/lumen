@@ -1,51 +1,51 @@
 #include <iostream>
 
-#include <kc/core/Log.h>
-
 #include "core/Core.h"
 #include "core/Image.h"
 #include "core/Camera.h"
 
+#include "geometry/Sphere.h"
+#include "geometry/IntersectableCollection.h"
+
+#include "Scene.h"
+#include "Renderer.h"
+
 int main() {
     kc::core::initLogging("lumen");
 
-    constexpr lm::u64 width  = 100;
-    constexpr lm::u64 height = 100;
-
-    lm::Image::Properties imageProps{ .width = width, .height = height };
-    lm::Image image{ imageProps };
+    constexpr lm::u64 width  = 800;
+    constexpr lm::u64 height = 600;
 
     lm::Camera::Properties cameraProps{
-        .viewportWidth  = width,
-        .viewportHeight = height,
-        .position       = lm::Vec3f{ 0.0f }
+        .position      = lm::Vec3f{0.0f,  0.0f, -2.5f},
+        .target        = lm::Vec3f{ 0.0f, 0.0f, 0.0f },
+        .verticalFOV   = 40.0f,
+        .aperture      = 1.0f,
+        .focusDistance = 1.0f,
+        .aspectRatio   = static_cast<lm::Float>(width) / height
     };
     lm::Camera camera{ cameraProps };
 
-    for (lm::i64 y = 0; y < height; ++y) {
-        for (lm::i64 x = 0; x < width; ++x) {
-            lm::Coordinates coords{ .x = x, .y = y };
-            const auto ray = camera.getRay(coords);
+    lm::Sphere sphere{
+        lm::Vec3f{-1.0f, 0.0f, 5.5f},
+        1.0f, lm::Vec3f{ 0.0f, 1.0f, 0.0f}
+    };
+    lm::Sphere sphere2{
+        lm::Vec3f{1.0f,  0.0f, 7.5f},
+        1.0f, lm::Vec3f{ 1.0f, 0.0f, 0.0f}
+    };
+    lm::Scene scene;
+    scene.world.add(&sphere).add(&sphere2);
 
-            static constexpr float R = 50.0f;
-
-            lm::Vec3f c1{ 0.0f, 1.0f, 0.0f };
-            lm::Vec3f c2{ 1.0f, 0.0f, 0.0f };
-
-            const auto d =
-              ray.direction.x * ray.direction.x + ray.direction.y * ray.direction.y;
-
-            if (d <= R * R) {
-                const auto dd = glm::sqrt(d) / R;
-
-                image.set(coords, c1 * dd + (1.0f - dd) * c2);
-            } else {
-                image.set(coords, lm::Vec3f{ 1.0f, 1.0f, 1.0f });
-            }
-        }
-    }
+    lm::Renderer::Properties props{
+        .frameWidth      = width,
+        .frameHeight     = height,
+        .recursionDepth  = 16,
+        .samplesPerPixel = 16
+    };
+    lm::Renderer renderer{ props, &camera };
+    const auto image = renderer.render(scene);
 
     image.save("test.jpg");
-
     return 0;
 }

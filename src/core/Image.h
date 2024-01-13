@@ -18,8 +18,8 @@ public:
 
     explicit Image(const Properties& props);
 
-    void set(const Coordinates& coords, const Vec3f& data);
-    void save(const std::string& file);
+    void set(const Coordinates<i64>& coords, const Vec3f& data);
+    void save(const std::string& file) const;
 
 private:
     Properties m_props;

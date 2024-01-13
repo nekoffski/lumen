@@ -2,17 +2,27 @@
 
 namespace lm {
 
-Camera::Camera(const Properties& props) :
-    m_props(props), m_halfWidth(props.viewportWidth / 2.0f),
-    m_halfHeight(props.viewportHeight / 2.0f) {}
+Camera::Camera(const Properties& props) : m_props(props) {
+    auto theta           = glm::radians(props.verticalFOV);
+    auto h               = std::tan(theta / 2);
+    Float viewportHeight = 2.0f * h;
+    Float viewportWidth  = m_props.aspectRatio * viewportHeight;
 
-Ray Camera::getRay(const Coordinates& coords) {
-    const Float x = static_cast<Float>(coords.x) - m_halfWidth + 0.5f;
-    const Float y = static_cast<Float>(coords.y) - m_halfHeight + 0.5f;
-    const Float z = 1.0f;
+    m_w = normalize(props.position - props.target);
+    m_u = normalize(cross(Vec3f{ 0.0, 1.0f, 0.0f }, m_w));
+    m_v = cross(m_w, m_u);
 
+    auto focal_length = 1.0f;
+
+    m_horizontal = props.focusDistance * viewportWidth * m_u;
+    m_vertical   = props.focusDistance * viewportHeight * m_v;
+    m_center     = props.position - props.focusDistance * m_w;
+}
+
+Ray Camera::getRay(const Coordinates<Float>& coords) {
     return Ray{
-        m_props.position, Vec3f{x, -y, z}
+        m_props.position,
+        m_center + coords.y * m_vertical + coords.x * m_horizontal - m_props.position
     };
 }
 

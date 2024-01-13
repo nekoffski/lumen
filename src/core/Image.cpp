@@ -9,7 +9,7 @@ Image::Image(const Properties& props) :
     m_props(props), m_bufferSize(props.width * props.height * channels),
     m_buffer(m_bufferSize) {}
 
-void Image::set(const Coordinates& coords, const Vec3f& data) {
+void Image::set(const Coordinates<i64>& coords, const Vec3f& data) {
     const auto coordinate = (coords.y * m_props.width + coords.x) * channels;
     ASSERT(
       coordinate + channels - 1 < m_bufferSize,
@@ -20,7 +20,7 @@ void Image::set(const Coordinates& coords, const Vec3f& data) {
     }
 }
 
-void Image::save(const std::string& file) {
+void Image::save(const std::string& file) const {
     const auto result = stbi_write_jpg(
       file.c_str(), m_props.width, m_props.height, channels, m_buffer.data(), 100
     );

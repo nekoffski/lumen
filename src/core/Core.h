@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <kc/core/Log.h>
+
 namespace lm {
 
 using u64 = uint64_t;
@@ -16,9 +18,9 @@ using i8  = int8_t;
 
 using Float = float;
 
-struct Coordinates {
-    i64 x;
-    i64 y;
+template <typename T> struct Coordinates {
+    T x;
+    T y;
 };
 
 }  // namespace lm
