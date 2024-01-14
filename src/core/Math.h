@@ -7,6 +7,8 @@
 
 namespace lm {
 
+using namespace kc::math;
+
 using namespace glm;
 
 using Vec2f = vec2;

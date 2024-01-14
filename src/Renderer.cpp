@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include "core/Math.h"
+
 namespace lm {
 
 Renderer::Renderer(const Properties& properties, Camera* camera) :
@@ -38,11 +40,15 @@ Vec3f Renderer::traceRay(
 ) {
     static Vec3f background{ 0.3f, 0.4f, 0.5f };
 
+    if (recursionDepth <= 0) return background;
+
     lm::Interval interval{ 0.0001f };
     if (auto record = world.intersect(ray, interval); record) {
-        return record->color;
-    }
+        const auto newDirection = randomUnitHemisphereVec3(record->normal);
+        Ray ray{ record->intersectionPoint, newDirection };
 
+        return record->getColor() * traceRay(ray, world, recursionDepth - 1);
+    }
     return background;
 }
 

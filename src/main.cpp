@@ -10,6 +10,9 @@
 #include "Scene.h"
 #include "Renderer.h"
 
+#include "material/Lambertian.h"
+#include "texture/SolidColor.h"
+
 int main() {
     kc::core::initLogging("lumen");
 
@@ -26,13 +29,19 @@ int main() {
     };
     lm::Camera camera{ cameraProps };
 
+    lm::SolidColor red{ 1.0f, 0.0f, 0.0f };
+    lm::SolidColor green{ 0.0f, 1.0f, 0.0f };
+
+    lm::Lambertian redMaterial{ &red };
+    lm::Lambertian greenMaterial{ &green };
+
     lm::Sphere sphere{
         lm::Vec3f{-1.0f, 0.0f, 5.5f},
-        1.0f, lm::Vec3f{ 0.0f, 1.0f, 0.0f}
+        1.0f, &redMaterial
     };
     lm::Sphere sphere2{
-        lm::Vec3f{1.0f,  0.0f, 7.5f},
-        1.0f, lm::Vec3f{ 1.0f, 0.0f, 0.0f}
+        lm::Vec3f{1.0f, 0.0f, 7.5f},
+        1.0f, &greenMaterial
     };
     lm::Scene scene;
     scene.world.add(&sphere).add(&sphere2);

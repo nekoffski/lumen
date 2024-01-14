@@ -6,12 +6,25 @@
 #include "core/Interval.h"
 #include "core/Ray.h"
 
+#include "material/Material.h"
+
 namespace lm {
 
-struct Intersection {
+class Intersection {
+public:
+    explicit Intersection(
+      Float t, const Vec3f& intersectionPoint, const Vec3f& normal,
+      Material* material
+    );
+
+    Vec3f getColor() const;
+
     Float t;
     Vec3f intersectionPoint;
-    Vec3f color;
+    Vec3f normal;
+
+private:
+    Material* m_material;
 };
 
 struct Intersectable {
