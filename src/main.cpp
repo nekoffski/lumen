@@ -7,44 +7,25 @@
 #include "geometry/Sphere.h"
 #include "geometry/IntersectableCollection.h"
 
-#include "Scene.h"
+#include "scene/SceneLoader.h"
+#include "scene/Scene.h"
+
 #include "Renderer.h"
 
 #include "material/Lambertian.h"
 #include "texture/SolidColor.h"
 
-int main() {
+int main(int argc, char** argv) {
     kc::core::initLogging("lumen");
 
     constexpr lm::u64 width  = 800;
     constexpr lm::u64 height = 600;
+    constexpr lm::Float fov  = static_cast<lm::Float>(width) / height;
 
-    lm::Camera::Properties cameraProps{
-        .position      = lm::Vec3f{0.0f,  0.0f, -2.5f},
-        .target        = lm::Vec3f{ 0.0f, 0.0f, 0.0f },
-        .verticalFOV   = 40.0f,
-        .aperture      = 1.0f,
-        .focusDistance = 1.0f,
-        .aspectRatio   = static_cast<lm::Float>(width) / height
+    lm::SceneLoader::Config sceneLoaderConfig{
+        .filePath = "../scenes/test.json", .fov = fov
     };
-    lm::Camera camera{ cameraProps };
-
-    lm::SolidColor red{ 1.0f, 0.0f, 0.0f };
-    lm::SolidColor green{ 0.0f, 1.0f, 0.0f };
-
-    lm::Lambertian redMaterial{ &red };
-    lm::Lambertian greenMaterial{ &green };
-
-    lm::Sphere sphere{
-        lm::Vec3f{-1.0f, 0.0f, 5.5f},
-        1.0f, &redMaterial
-    };
-    lm::Sphere sphere2{
-        lm::Vec3f{1.0f, 0.0f, 7.5f},
-        1.0f, &greenMaterial
-    };
-    lm::Scene scene;
-    scene.world.add(&sphere).add(&sphere2);
+    auto scene = lm::SceneLoader{ sceneLoaderConfig }.load();
 
     lm::Renderer::Properties props{
         .frameWidth      = width,
@@ -52,8 +33,9 @@ int main() {
         .recursionDepth  = 16,
         .samplesPerPixel = 16
     };
-    lm::Renderer renderer{ props, &camera };
-    const auto image = renderer.render(scene);
+    lm::Renderer renderer{ props, scene->getCamera() };
+    lm::RenderPacket renderPacket{ scene->getWorld() };
+    const auto image = renderer.render(renderPacket);
 
     image.save("test.jpg");
     return 0;

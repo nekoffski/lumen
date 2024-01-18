@@ -16,9 +16,8 @@ std::optional<Intersection> IntersectableCollection::intersect(
     return closestHit;
 }
 
-IntersectableCollection& IntersectableCollection::add(Intersectable* object) {
+void IntersectableCollection::add(Intersectable* object) {
     m_objects.push_back(object);
-    return *this;
 }
 
 }  // namespace lm

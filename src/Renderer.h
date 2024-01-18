@@ -3,9 +3,13 @@
 #include "core/Core.h"
 #include "core/Camera.h"
 #include "core/Image.h"
-#include "Scene.h"
+#include "geometry/Intersectable.h"
 
 namespace lm {
+
+struct RenderPacket {
+    Intersectable* world;
+};
 
 class Renderer {
 public:
@@ -18,12 +22,12 @@ public:
 
     explicit Renderer(const Properties& properties, Camera* camera);
 
-    Image render(const Scene& scene);
+    Image render(const RenderPacket& renderPacket);
 
 private:
     Coordinates<Float> toNDC(const Coordinates<i64>& coordinates);
 
-    Vec3f traceRay(const Ray& ray, const Intersectable& world, u64 recursionDepth);
+    Vec3f traceRay(const Ray& ray, Intersectable* world, u64 recursionDepth);
 
     Properties m_props;
     Camera* m_camera;
