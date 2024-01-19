@@ -20,10 +20,17 @@ Image Renderer::render(const RenderPacket& renderPacket) {
     for (i64 y = 0; y < m_props.frameHeight; ++y) {
         for (i64 x = 0; x < m_props.frameWidth; ++x) {
             lm::Coordinates<i64> coords{ .x = x, .y = y };
-            const auto ray = m_camera->getRay(toNDC(coords));
-            const auto color =
-              traceRay(ray, renderPacket.world, m_props.recursionDepth);
-            image.set(coords, color);
+
+            Vec3f pixelColor{ 0.0f };
+
+            for (i64 sample = 0; sample < m_props.samplesPerPixel; ++sample) {
+                const auto ray = m_camera->getRay(toNDC(coords));
+                pixelColor +=
+                  traceRay(ray, renderPacket.world, m_props.recursionDepth);
+            }
+            image.set(
+              coords, pixelColor / static_cast<Float>(m_props.samplesPerPixel)
+            );
         }
     }
     return image;
@@ -42,11 +49,16 @@ Vec3f Renderer::traceRay(const Ray& ray, Intersectable* world, u64 recursionDept
     if (recursionDepth <= 0) return background;
 
     lm::Interval interval{ 0.0001f };
-    if (auto record = world->intersect(ray, interval); record) {
-        const auto newDirection = randomUnitHemisphereVec3(record->normal);
-        Ray ray{ record->intersectionPoint, newDirection };
+    if (auto intersection = world->intersect(ray, interval); intersection) {
+        const auto color = intersection->getColor();
 
-        return record->getColor() * traceRay(ray, world, recursionDepth - 1);
+        if (auto scatterRecord = intersection->scatter(); scatterRecord) {
+            Ray scatteredRay{
+                intersection->intersectionPoint, scatterRecord->direction
+            };
+            return color * traceRay(scatteredRay, world, recursionDepth - 1);
+        }
+        return color;
     }
     return background;
 }

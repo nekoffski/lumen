@@ -10,7 +10,10 @@ Image::Image(const Properties& props) :
     m_buffer(m_bufferSize) {}
 
 void Image::set(const Coordinates<i64>& coords, const Vec3f& data) {
-    const auto coordinate = (coords.y * m_props.width + coords.x) * channels;
+    const auto coordinate =
+      ((m_props.height - coords.y - 1) * m_props.width
+       + (m_props.width - coords.x - 1))
+      * channels;
     ASSERT(
       coordinate + channels - 1 < m_bufferSize,
       "Tried to write outside of the buffer"

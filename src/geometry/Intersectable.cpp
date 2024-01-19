@@ -12,4 +12,8 @@ Vec3f Intersection::getColor() const {
     return m_material->getTexture()->getColor({ 0.0f, 0.0f });
 }
 
+std::optional<ScatterRecord> Intersection::scatter() const {
+    return m_material->scatter(normal, intersectionPoint);
+}
+
 }  // namespace lm

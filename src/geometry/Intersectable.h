@@ -19,6 +19,8 @@ public:
 
     Vec3f getColor() const;
 
+    std::optional<ScatterRecord> scatter() const;
+
     Float t;
     Vec3f intersectionPoint;
     Vec3f normal;

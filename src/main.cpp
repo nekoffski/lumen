@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
     lm::Renderer::Properties props{
         .frameWidth      = width,
         .frameHeight     = height,
-        .recursionDepth  = 16,
-        .samplesPerPixel = 16
+        .recursionDepth  = 8,
+        .samplesPerPixel = 8
     };
     lm::Renderer renderer{ props, scene->getCamera() };
     lm::RenderPacket renderPacket{ scene->getWorld() };

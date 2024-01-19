@@ -11,6 +11,10 @@ public:
 
     Texture* getTexture() const override;
 
+    std::optional<ScatterRecord> scatter(
+      const Vec3f& normal, const Vec3f& intersectionPoint
+    ) const override;
+
 private:
     Texture* m_texture;
 };
