@@ -25,6 +25,8 @@ public:
     Image render(const RenderPacket& renderPacket);
 
 private:
+    Float getRandomThrottle() const;
+
     Coordinates<Float> toNDC(const Coordinates<i64>& coordinates);
 
     Vec3f traceRay(const Ray& ray, Intersectable* world, u64 recursionDepth);

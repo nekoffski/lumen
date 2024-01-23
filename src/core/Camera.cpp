@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "core/Math.h"
+
 namespace lm {
 
 Camera::Camera(const Properties& props) : m_props(props) {
@@ -20,10 +22,9 @@ Camera::Camera(const Properties& props) : m_props(props) {
 }
 
 Ray Camera::getRay(const Coordinates<Float>& coords) {
-    return Ray{
-        m_props.position,
-        m_center + coords.y * m_vertical + coords.x * m_horizontal - m_props.position
-    };
+    const auto direction =
+      m_center + coords.y * m_vertical + coords.x * m_horizontal - m_props.position;
+    return Ray{ m_props.position, direction };
 }
 
 }  // namespace lm

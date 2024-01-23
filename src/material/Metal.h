@@ -5,9 +5,9 @@
 
 namespace lm {
 
-class Lambertian : public Material {
+class Metal : public Material {
 public:
-    explicit Lambertian(Texture* texture);
+    explicit Metal(Texture* texture, Float fuzziness);
 
     Texture* getTexture() const override;
 
@@ -17,6 +17,7 @@ public:
 
 private:
     Texture* m_texture;
+    Float m_fuzziness;
 };
 
 }  // namespace lm

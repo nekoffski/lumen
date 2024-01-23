@@ -9,9 +9,10 @@ Lambertian::Lambertian(Texture* texture) : m_texture(texture) {}
 Texture* Lambertian::getTexture() const { return m_texture; }
 
 std::optional<ScatterRecord> Lambertian::scatter(
-  const Vec3f& normal, [[maybe_unused]] const Vec3f& intersectionPoint
+  [[maybe_unused]] const Ray& ray, const Vec3f& normal,
+  [[maybe_unused]] const Vec3f& intersectionPoint
 ) const {
-    return ScatterRecord{ randomUnitHemisphereVec3(normal) };
+    return ScatterRecord{ normal + randomUnitSphereVec3() };
 }
 
 }  // namespace lm

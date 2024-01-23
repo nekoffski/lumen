@@ -8,6 +8,8 @@
 
 #include "texture/SolidColor.h"
 #include "material/Lambertian.h"
+#include "material/Metal.h"
+
 #include "geometry/Sphere.h"
 
 namespace lm {
@@ -99,6 +101,11 @@ void SceneLoader::processMaterials(const kc::json::Node& root) {
             const auto textureName = getField<std::string>(r.object, "texture");
             const auto texture     = m_scene->getTexture(textureName);
             m_scene->addMaterial<Lambertian>(r.name, texture);
+        } else if (r.type == "metal") {
+            const auto textureName = getField<std::string>(r.object, "texture");
+            const auto fuzziness   = getField<Float>(r.object, "fuzziness");
+            const auto texture     = m_scene->getTexture(textureName);
+            m_scene->addMaterial<Metal>(r.name, texture, fuzziness);
         }
     });
 }

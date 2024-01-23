@@ -19,7 +19,7 @@ public:
 
     Vec3f getColor() const;
 
-    std::optional<ScatterRecord> scatter() const;
+    std::optional<ScatterRecord> scatter(const Ray& ray) const;
 
     Float t;
     Vec3f intersectionPoint;

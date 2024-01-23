@@ -36,23 +36,33 @@ Image Renderer::render(const RenderPacket& renderPacket) {
     return image;
 }
 
+Float Renderer::getRandomThrottle() const {
+    static constexpr Float range = 1.0f;
+    static constexpr Float max   = range / 2.0f;
+    static constexpr Float min   = -max;
+
+    return random<Float>(min, max);
+}
+
 Coordinates<Float> Renderer::toNDC(const Coordinates<i64>& coordinates) {
+    const auto shiftedX = coordinates.x - m_halfFrameWidth + getRandomThrottle();
+    const auto shiftedY = coordinates.y - m_halfFrameHeight + getRandomThrottle();
+
     return Coordinates<Float>{
-        .x = (coordinates.x - m_halfFrameWidth) / m_frameWidthNumeric,
-        .y = (coordinates.y - m_halfFrameHeight) / m_frameHeightNumeric
+        .x = shiftedX / m_frameWidthNumeric, .y = shiftedY / m_frameHeightNumeric
     };
 }
 
 Vec3f Renderer::traceRay(const Ray& ray, Intersectable* world, u64 recursionDepth) {
     static Vec3f background{ 0.3f, 0.4f, 0.5f };
 
-    if (recursionDepth <= 0) return background;
+    if (recursionDepth <= 0) return Vec3f{ 0.0f };
 
     lm::Interval interval{ 0.0001f };
     if (auto intersection = world->intersect(ray, interval); intersection) {
         const auto color = intersection->getColor();
 
-        if (auto scatterRecord = intersection->scatter(); scatterRecord) {
+        if (auto scatterRecord = intersection->scatter(ray); scatterRecord) {
             Ray scatteredRay{
                 intersection->intersectionPoint, scatterRecord->direction
             };
