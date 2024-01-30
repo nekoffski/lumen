@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Material.h"
+
 #include "texture/Texture.h"
+#include "texture/SolidColor.h"
 
 namespace lm {
 
-class Lambertian : public Material {
+class Dielectric : public Material {
 public:
-    explicit Lambertian(Texture* texture);
+    explicit Dielectric(Float indexOfRefraction);
 
     const Texture* getTexture() const override;
 
@@ -16,7 +18,8 @@ public:
     ) const override;
 
 private:
-    Texture* m_texture;
+    Float m_indexOfRefraction;
+    SolidColor m_attenuation;
 };
 
 }  // namespace lm

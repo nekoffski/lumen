@@ -18,6 +18,7 @@ public:
         u64 frameHeight;
         u64 recursionDepth;
         u64 samplesPerPixel;
+        bool parallel;
     };
 
     explicit Renderer(const Properties& properties, Camera* camera);

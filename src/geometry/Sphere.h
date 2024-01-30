@@ -33,9 +33,9 @@ public:
 
         auto intersectionPoint = ray.at(t0);
 
-        return Intersection(
-          t0, intersectionPoint, normalize(intersectionPoint - origin), material
-        );
+        const auto normal = normalize(intersectionPoint - origin);
+        bool isFrontFace  = dot(ray.direction, normal) < 0;
+        return Intersection(t0, intersectionPoint, isFrontFace, normal, material);
     }
 
     const Vec3f origin;

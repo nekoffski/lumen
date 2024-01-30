@@ -9,7 +9,7 @@ class Metal : public Material {
 public:
     explicit Metal(Texture* texture, Float fuzziness);
 
-    Texture* getTexture() const override;
+    const Texture* getTexture() const override;
 
     std::optional<ScatterRecord> scatter(
       const Ray& ray, const Vec3f& normal, const Vec3f& intersectionPoint

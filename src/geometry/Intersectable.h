@@ -13,7 +13,7 @@ namespace lm {
 class Intersection {
 public:
     explicit Intersection(
-      Float t, const Vec3f& intersectionPoint, const Vec3f& normal,
+      Float t, const Vec3f& intersectionPoint, bool isFrontFace, const Vec3f& normal,
       Material* material
     );
 
@@ -24,6 +24,7 @@ public:
     Float t;
     Vec3f intersectionPoint;
     Vec3f normal;
+    bool isFrontFace;
 
 private:
     Material* m_material;

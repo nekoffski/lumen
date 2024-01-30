@@ -3,10 +3,12 @@
 namespace lm {
 
 Intersection::Intersection(
-  Float t, const Vec3f& intersectionPoint, const Vec3f& normal, Material* material
+  Float t, const Vec3f& intersectionPoint, bool isFrontFace, const Vec3f& normal,
+  Material* material
 ) :
     t(t),
-    intersectionPoint(intersectionPoint), normal(normal), m_material(material) {}
+    intersectionPoint(intersectionPoint), isFrontFace(isFrontFace),
+    normal(isFrontFace ? normal : -normal), m_material(material) {}
 
 Vec3f Intersection::getColor() const {
     return m_material->getTexture()->getColor({ 0.0f, 0.0f });

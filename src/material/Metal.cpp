@@ -7,7 +7,7 @@ namespace lm {
 Metal::Metal(Texture* texture, Float fuzziness) :
     m_texture(texture), m_fuzziness(fuzziness) {}
 
-Texture* Metal::getTexture() const { return m_texture; }
+const Texture* Metal::getTexture() const { return m_texture; }
 
 std::optional<ScatterRecord> Metal::scatter(
   const Ray& ray, const Vec3f& normal, const Vec3f& intersectionPoint

@@ -9,6 +9,7 @@
 #include "texture/SolidColor.h"
 #include "material/Lambertian.h"
 #include "material/Metal.h"
+#include "material/Dielectric.h"
 
 #include "geometry/Sphere.h"
 
@@ -106,6 +107,9 @@ void SceneLoader::processMaterials(const kc::json::Node& root) {
             const auto fuzziness   = getField<Float>(r.object, "fuzziness");
             const auto texture     = m_scene->getTexture(textureName);
             m_scene->addMaterial<Metal>(r.name, texture, fuzziness);
+        } else if (r.type == "dielectric") {
+            const auto ior = getField<Float>(r.object, "index-of-refraction");
+            m_scene->addMaterial<Dielectric>(r.name, ior);
         }
     });
 }
