@@ -18,7 +18,7 @@
 int main(int argc, char** argv) {
     kc::core::initLogging("lumen");
 
-    constexpr lm::u64 width  = 800;
+    constexpr lm::u64 width  = 600;
     constexpr lm::u64 height = 600;
     constexpr lm::Float fov  = static_cast<lm::Float>(width) / height;
 

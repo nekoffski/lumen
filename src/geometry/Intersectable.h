@@ -6,6 +6,8 @@
 #include "core/Interval.h"
 #include "core/Ray.h"
 
+#include "BoundingVolume.h"
+
 #include "material/Material.h"
 
 namespace lm {
@@ -34,6 +36,8 @@ struct Intersectable {
     virtual std::optional<Intersection> intersect(
       const Ray& ray, const Interval& interval
     ) const = 0;
+
+    virtual BoundingVolume* getBoundingVolume() const { return nullptr; }
 };
 
 }  // namespace lm

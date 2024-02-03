@@ -29,7 +29,7 @@ public:
             t0 = t1;
             if (t0 < 0) return {};
         }
-        if (not interval.inBetween(t0)) return {};
+        if (not interval.contains(t0)) return {};
 
         auto intersectionPoint = ray.at(t0);
 

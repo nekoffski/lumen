@@ -8,7 +8,7 @@ struct Interval {
     explicit Interval(Float min, Float max);
     explicit Interval(Float min);
 
-    bool inBetween(const float value) const;
+    bool contains(const float value) const;
 
     Float min;
     Float max;

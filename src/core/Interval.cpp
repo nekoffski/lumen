@@ -10,7 +10,7 @@ Interval::Interval(Float min, Float max) : min(min), max(max) {
 
 Interval::Interval(Float min) : min(min), max(std::numeric_limits<Float>::max()) {}
 
-bool Interval::inBetween(const Float value) const {
+bool Interval::contains(const Float value) const {
     return min <= value && value <= max;
 }
 

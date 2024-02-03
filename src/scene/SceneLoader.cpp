@@ -7,11 +7,13 @@
 #include <kc/json/Utils.hpp>
 
 #include "texture/SolidColor.h"
+
 #include "material/Lambertian.h"
 #include "material/Metal.h"
 #include "material/Dielectric.h"
 
 #include "geometry/Sphere.h"
+#include "geometry/Quad.h"
 
 namespace lm {
 
@@ -123,6 +125,13 @@ void SceneLoader::processObjects(const kc::json::Node& root) {
             const auto materialName = getField<std::string>(r.object, "material");
             const auto material     = m_scene->getMaterial(materialName);
             m_scene->addObject<Sphere>(r.name, position, radius, material);
+        } else if (r.type == "quad") {
+            const auto origin       = getField<Vec3f>(r.object, "origin");
+            const auto u            = getField<Vec3f>(r.object, "u");
+            const auto v            = getField<Vec3f>(r.object, "v");
+            const auto materialName = getField<std::string>(r.object, "material");
+            const auto material     = m_scene->getMaterial(materialName);
+            m_scene->addObject<Quad>(r.name, origin, u, v, material);
         }
     });
 }
