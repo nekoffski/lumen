@@ -5,6 +5,7 @@
 
 #include "geometry/IntersectableCollection.h"
 #include "geometry/Intersectable.h"
+#include "geometry/BVH.h"
 #include "material/Material.h"
 #include "texture/Texture.h"
 #include "core/Camera.h"
@@ -49,6 +50,10 @@ private:
 
     IntersectableCollection m_world;
     Camera m_camera;
+
+    bool m_useBVH;
+
+    std::shared_ptr<BVHNode> m_bvh;
 };
 
 }  // namespace lm

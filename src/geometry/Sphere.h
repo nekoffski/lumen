@@ -3,13 +3,15 @@
 #include "core/Math.h"
 #include "material/Material.h"
 #include "Intersectable.h"
+#include "AABB.h"
 
 namespace lm {
 
 class Sphere : public Intersectable {
 public:
     explicit Sphere(const Vec3f& origin, const Float radius, Material* material) :
-        origin(origin), radius(radius), material(material) {}
+        origin(origin), radius(radius), material(material),
+        boundingBox(origin - radius, origin + radius) {}
 
     std::optional<Intersection> intersect(const Ray& ray, const Interval& interval)
       const {
@@ -34,13 +36,18 @@ public:
         auto intersectionPoint = ray.at(t0);
 
         const auto normal = normalize(intersectionPoint - origin);
-        bool isFrontFace  = dot(ray.direction, normal) < 0;
-        return Intersection(t0, intersectionPoint, isFrontFace, normal, material);
+        return Intersection{
+            t0, intersectionPoint, dot(ray.direction, normal) < 0, normal, material
+        };
     }
+
+    const BoundingVolume* getBoundingVolume() const { return &boundingBox; }
 
     const Vec3f origin;
     const Float radius;
     Material* material;
+
+    const AABB boundingBox;
 };
 
 }  // namespace lm

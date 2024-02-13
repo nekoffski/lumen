@@ -3,6 +3,7 @@
 #include "core/Math.h"
 #include "material/Material.h"
 #include "Intersectable.h"
+#include "AABB.h"
 
 namespace lm {
 
@@ -13,40 +14,38 @@ public:
     ) :
         origin(origin),
         u(u), v(v), material(material), normal(normalize(cross(u, v))),
-        d(dot(normal, origin)) {
+        d(dot(normal, origin)), m_boundingBox(origin, origin + u + v) {
         auto n = cross(u, v);
         w      = n / dot(n, n);
     }
 
     std::optional<Intersection> intersect(const Ray& ray, const Interval& interval)
       const {
-        auto denom = dot(normal, ray.direction);
+        static constexpr Float delta = 1e-8f;
+        const auto denominator       = dot(normal, ray.direction);
 
-        if (std::fabs(denom) < 1e-8)  // parallel hit
+        if (std::fabs(denominator) < delta) return {};  // parallel hit
+
+        auto hitInterval = (d - dot(normal, ray.origin)) / denominator;
+
+        if (not interval.contains(hitInterval)) return {};
+
+        auto hitPoint = ray.at(hitInterval);
+
+        const auto alfa = dot(w, cross(hitPoint - origin, v));
+        const auto beta = dot(w, cross(u, hitPoint - origin));
+
+        static Interval unitInterval{ 0.0f, 1.0f };
+
+        if (not unitInterval.contains(alfa) || not unitInterval.contains(beta))
             return {};
 
-        auto t = (d - dot(normal, ray.origin)) / denom;
-        if (not interval.contains(t)) return {};
-
-        // Determine the hit point lies within the planar shape using its plane
-        // coordinates.
-        auto intersection        = ray.at(t);
-        vec3 planar_hitpt_vector = intersection - origin;
-        auto alpha               = dot(w, cross(planar_hitpt_vector, v));
-        auto beta                = dot(w, cross(u, planar_hitpt_vector));
-
-        if (not isInterior(alpha, beta)) return {};
-
-        bool isFrontFace = dot(ray.direction, normal) < 0;
-        return Intersection(t, intersection, isFrontFace, normal, material);
+        return Intersection{
+            hitInterval, hitPoint, dot(ray.direction, normal) < 0, normal, material
+        };
     }
 
-    bool isInterior(Float a, Float b) const {
-        // Given the hit point in plane coordinates, return false if it is outside
-        // the primitive, otherwise set the hit record UV coordinates and return
-        // true.
-        return !((a < 0) || (1 < a) || (b < 0) || (1 < b));
-    }
+    const BoundingVolume* getBoundingVolume() const { return &m_boundingBox; }
 
     const Vec3f origin;
     const Vec3f u;
@@ -55,6 +54,7 @@ public:
     const Float d;
     Vec3f w;
     Material* material;
+    AABB m_boundingBox;
 };
 
 }  // namespace lm

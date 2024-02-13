@@ -8,9 +8,15 @@ namespace lm {
 
 class AABB : public BoundingVolume {
 public:
+    explicit AABB();
     explicit AABB(const Vec3f& min, const Vec3f& max);
 
-    bool intersects(const Ray& ray, const Interval& interval) override;
+    void mergeWith(const AABB& oth);
+
+    bool intersects(const Ray& ray, const Interval& interval) const override;
+
+    const Vec3f& getMin() const;
+    const Vec3f& getMax() const;
 
 private:
     Vec3f m_min;

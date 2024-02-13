@@ -37,7 +37,7 @@ struct Intersectable {
       const Ray& ray, const Interval& interval
     ) const = 0;
 
-    virtual BoundingVolume* getBoundingVolume() const { return nullptr; }
+    virtual const BoundingVolume* getBoundingVolume() const { return nullptr; }
 };
 
 }  // namespace lm

@@ -6,7 +6,7 @@
 namespace lm {
 
 struct BoundingVolume {
-    virtual bool intersects(const Ray& ray, const Interval& interval) = 0;
+    virtual bool intersects(const Ray& ray, const Interval& interval) const = 0;
 };
 
 }  // namespace lm

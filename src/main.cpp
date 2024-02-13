@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     constexpr lm::Float fov  = static_cast<lm::Float>(width) / height;
 
     lm::SceneLoader::Config sceneLoaderConfig{
-        .filePath = "../scenes/test.json", .fov = fov
+        .filePath = "../scenes/cornell.json", .fov = fov
     };
     auto scene = lm::SceneLoader{ sceneLoaderConfig }.load();
 

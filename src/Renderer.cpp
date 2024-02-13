@@ -81,6 +81,7 @@ Vec3f Renderer::traceRay(const Ray& ray, Intersectable* world, u64 recursionDept
     if (recursionDepth <= 0) return Vec3f{ 0.0f };
 
     lm::Interval interval{ 0.0001f };
+
     if (auto intersection = world->intersect(ray, interval); intersection) {
         const auto color = intersection->getColor();
 

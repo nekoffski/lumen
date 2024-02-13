@@ -60,40 +60,23 @@
     }
   },
   "objects": {
-    "q1": {
-      "type": "quad",
-      "origin": [-3, -2, 5],
-      "u": [0, 0, -4],
-      "v": [0, 4, 0],
+    "s1": {
+      "type": "sphere",
+      "position": [0.0, 0.0, 0.0],
+      "radius": 1.5,
       "material": "red"
     },
-    "q2": {
-      "type": "quad",
-      "origin": [-2, -2, 0],
-      "u": [4, 0, 0],
-      "v": [0, 4, 0],
+    "s2": {
+      "type": "sphere",
+      "position": [-3.5, 0.0, 0.0],
+      "radius": 1.5,
+      "material": "teal"
+    },
+    "s3": {
+      "type": "sphere",
+      "position": [3.5, 0.0, 0.0],
+      "radius": 1.5,
       "material": "green"
-    },
-    "q3": {
-      "type": "quad",
-      "origin": [3, -2, 1],
-      "u": [0, 0, 4],
-      "v": [0, 4, 0],
-      "material": "blue"
-    },
-    "q4": {
-      "type": "quad",
-      "origin": [-2, 3, 1],
-      "u": [4, 0, 0],
-      "v": [0, 0, 4],
-      "material": "orange"
-    },
-    "q5": {
-      "type": "quad",
-      "origin": [-2, -3, 5],
-      "u": [4, 0, 0],
-      "v": [0, 0, -4],
-      "material": "red"
     }
   }
 }
