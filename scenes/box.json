@@ -1,6 +1,6 @@
 {
   "camera": {
-    "position": [315, 315, -750],
+    "position": [278, 278, -750],
     "target": [278, 278, 0],
     "vertical-fov": 40.0,
     "aperture": 1.0,
@@ -43,48 +43,6 @@
     }
   },
   "objects": {
-    "q1": {
-      "type": "quad",
-      "origin": [555, 0, 0],
-      "u": [0, 0, 555],
-      "v": [0, 555, 0],
-      "material": "green"
-    },
-    "q2": {
-      "type": "quad",
-      "origin": [0, 0, 0],
-      "u": [0, 555, 0],
-      "v": [0, 0, 555],
-      "material": "red"
-    },
-    "q3": {
-      "type": "quad",
-      "origin": [343, 554, 332],
-      "u": [-130, 0, 0],
-      "v": [0, 0, -105],
-      "material": "diffuse-light"
-    },
-    "q4": {
-      "type": "quad",
-      "origin": [555, 0, 555],
-      "u": [0, 0, -555],
-      "v": [-555, 0, 0],
-      "material": "white"
-    },
-    "q5": {
-      "type": "quad",
-      "origin": [555, 555, 555],
-      "u": [-555, 0, 0],
-      "v": [0, 0, -555],
-      "material": "white"
-    },
-    "q6": {
-      "type": "quad",
-      "origin": [0, 0, 555],
-      "u": [0, 555, 0],
-      "v": [555, 0, 0],
-      "material": "white"
-    },
     "b1": {
       "type": "box",
       "min": [130, 0, 65],
@@ -93,7 +51,7 @@
     },
     "b2": {
       "type": "box",
-      "min": [265, 0, 315],
+      "min": [265, 0, 295],
       "max": [430, 330, 460],
       "material": "green"
     }

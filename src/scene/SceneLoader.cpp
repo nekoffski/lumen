@@ -11,9 +11,11 @@
 #include "material/Lambertian.h"
 #include "material/Metal.h"
 #include "material/Dielectric.h"
+#include "material/DiffuseLight.h"
 
 #include "geometry/Sphere.h"
 #include "geometry/Quad.h"
+#include "geometry/Box.h"
 
 namespace lm {
 
@@ -112,6 +114,10 @@ void SceneLoader::processMaterials(const kc::json::Node& root) {
         } else if (r.type == "dielectric") {
             const auto ior = getField<Float>(r.object, "index-of-refraction");
             m_scene->addMaterial<Dielectric>(r.name, ior);
+        } else if (r.type == "diffuse-light") {
+            const auto textureName = getField<std::string>(r.object, "texture");
+            const auto texture     = m_scene->getTexture(textureName);
+            m_scene->addMaterial<DiffuseLight>(r.name, texture);
         }
     });
 }
@@ -132,6 +138,12 @@ void SceneLoader::processObjects(const kc::json::Node& root) {
             const auto materialName = getField<std::string>(r.object, "material");
             const auto material     = m_scene->getMaterial(materialName);
             m_scene->addObject<Quad>(r.name, origin, u, v, material);
+        } else if (r.type == "box") {
+            const auto min          = getField<Vec3f>(r.object, "min");
+            const auto max          = getField<Vec3f>(r.object, "max");
+            const auto materialName = getField<std::string>(r.object, "material");
+            const auto material     = m_scene->getMaterial(materialName);
+            m_scene->addObject<Box>(r.name, min, max, material);
         }
     });
 }

@@ -40,9 +40,10 @@ public:
         if (not unitInterval.contains(alfa) || not unitInterval.contains(beta))
             return {};
 
-        return Intersection{
-            hitInterval, hitPoint, dot(ray.direction, normal) < 0, normal, material
-        };
+        bool frontFace = dot(ray.direction, normal) < 0;
+        if (not frontFace) return {};
+
+        return Intersection{ hitInterval, hitPoint, frontFace, normal, material };
     }
 
     const BoundingVolume* getBoundingVolume() const { return &m_boundingBox; }

@@ -16,6 +16,7 @@ public:
     void buildBoundingVolume();
 
     const std::vector<Intersectable*>& getObjects();
+    const BoundingVolume* getBoundingVolume() const override;
 
 private:
     std::vector<Intersectable*> m_objects;

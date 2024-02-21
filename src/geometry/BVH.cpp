@@ -84,12 +84,9 @@ std::optional<Intersection> BVHNode::intersect(
 
     if (auto leftHit = m_left->intersect(ray, interval); leftHit) {
         auto rightHit = m_right->intersect(
-          ray,
-          Interval(
-            std::max(interval.min, leftHit->t), std::min(interval.max, leftHit->t)
-          )
+          ray, Interval(interval.min, std::min(interval.max, leftHit->t))
         );
-        if (rightHit) return leftHit->t < rightHit->t ? leftHit : rightHit;
+        if (rightHit && leftHit->t > rightHit->t) return rightHit;
         return leftHit;
     }
     return m_right->intersect(ray, interval);

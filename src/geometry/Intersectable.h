@@ -20,6 +20,7 @@ public:
     );
 
     Vec3f getColor() const;
+    Vec3f getEmittedColor() const;
 
     std::optional<ScatterRecord> scatter(const Ray& ray) const;
 

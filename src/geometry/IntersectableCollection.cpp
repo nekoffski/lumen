@@ -5,8 +5,6 @@ namespace lm {
 std::optional<Intersection> IntersectableCollection::intersect(
   const Ray& ray, const Interval& interval
 ) const {
-    if (not m_boundingVolume.intersects(ray, interval)) return {};
-
     auto localInterval                     = interval;
     std::optional<Intersection> closestHit = {};
     for (const auto& object : m_objects) {
@@ -31,6 +29,10 @@ void IntersectableCollection::buildBoundingVolume() {
 
 const std::vector<Intersectable*>& IntersectableCollection::getObjects() {
     return m_objects;
+}
+
+const BoundingVolume* IntersectableCollection::getBoundingVolume() const {
+    return &m_boundingVolume;
 }
 
 }  // namespace lm

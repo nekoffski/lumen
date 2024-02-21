@@ -76,22 +76,24 @@ Coordinates<Float> Renderer::toNDC(const Coordinates<i64>& coordinates) {
 }
 
 Vec3f Renderer::traceRay(const Ray& ray, Intersectable* world, u64 recursionDepth) {
-    static Vec3f background{ 0.7f, 0.7f, 0.5f };
+    static Vec3f background{ 0.1f };
 
     if (recursionDepth <= 0) return Vec3f{ 0.0f };
 
     lm::Interval interval{ 0.0001f };
 
     if (auto intersection = world->intersect(ray, interval); intersection) {
-        const auto color = intersection->getColor();
+        const auto color        = intersection->getColor();
+        const auto emittedColor = intersection->getEmittedColor();
 
         if (auto scatterRecord = intersection->scatter(ray); scatterRecord) {
             Ray scatteredRay{
                 intersection->intersectionPoint, scatterRecord->direction
             };
-            return color * traceRay(scatteredRay, world, recursionDepth - 1);
+            return color * traceRay(scatteredRay, world, recursionDepth - 1)
+                   + emittedColor;
         }
-        return color;
+        return emittedColor;
     }
     return background;
 }
