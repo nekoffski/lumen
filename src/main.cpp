@@ -15,29 +15,40 @@
 #include "material/Lambertian.h"
 #include "texture/SolidColor.h"
 
+#include "Input.h"
+
+lm::Scene getScene(const lm::Config& cfg) {
+    if (cfg.random) {
+        // TODO:
+    } else {
+        lm::SceneLoader::Config sceneLoaderConfig{
+            .filePath = *cfg.inputPath, .fov = cfg.fov
+        };
+        auto scene = lm::SceneLoader{ sceneLoaderConfig }.load();
+        ASSERT(scene, "Could not load scene");
+        return *scene;
+    }
+}
+
 int main(int argc, char** argv) {
     kc::core::initLogging("lumen");
 
-    constexpr lm::u64 width  = 600;
-    constexpr lm::u64 height = 600;
-    constexpr lm::Float fov  = static_cast<lm::Float>(width) / height;
+    auto config = lm::Input{ argc, argv }.getConfig();
+    if (not config) return 0;
 
-    lm::SceneLoader::Config sceneLoaderConfig{
-        .filePath = "../scenes/cornell.json", .fov = fov
-    };
-    auto scene = lm::SceneLoader{ sceneLoaderConfig }.load();
+    auto scene = getScene(*config);
 
     lm::Renderer::Properties props{
-        .frameWidth      = width,
-        .frameHeight     = height,
-        .recursionDepth  = 8,
-        .samplesPerPixel = 8,
-        .parallel        = true
+        .frameWidth      = config->width,
+        .frameHeight     = config->height,
+        .recursionDepth  = config->recursionDepth,
+        .samplesPerPixel = config->samplesPerPixel,
+        .parallel        = config->parallel
     };
-    lm::Renderer renderer{ props, scene->getCamera() };
-    lm::RenderPacket renderPacket{ scene->getWorld() };
+    lm::Renderer renderer{ props, scene.getCamera() };
+    lm::RenderPacket renderPacket{ scene.getWorld() };
     const auto image = renderer.render(renderPacket);
 
-    image.save("test.jpg");
+    image.save(config->output);
     return 0;
 }

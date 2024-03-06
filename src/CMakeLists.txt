@@ -1,4 +1,4 @@
-set(LIBS kc fmt)
+set(LIBS kc fmt ${Boost_PROGRAM_OPTIONS_LIBRARY})
 set(TARGET lumen)
 set(INCLUDE ${CMAKE_CURRENT_SOURCE_DIR})
 
