@@ -1,18 +1,8 @@
 #include "BVH.h"
 
+#include "Instance.h"
+
 namespace lm {
-
-BVHNode::Wrapper::Wrapper(Intersectable* object) : m_object(object) {}
-
-std::optional<Intersection> BVHNode::Wrapper::intersect(
-  const Ray& ray, const Interval& interval
-) const {
-    return m_object->intersect(ray, interval);
-}
-
-const BoundingVolume* BVHNode::Wrapper::getBoundingVolume() const {
-    return m_object->getBoundingVolume();
-}
 
 BVHNode::BVHNode(const std::vector<Intersectable*>& objects) :
     BVHNode(objects, 0, objects.size()) {}
@@ -33,14 +23,14 @@ BVHNode::BVHNode(const std::vector<Intersectable*>& objects, u64 start, u64 end)
     );
 
     if (objectCount == 1) {
-        m_left = m_right = std::make_shared<Wrapper>(localObjects[start]);
+        m_left = m_right = std::make_shared<Instance>(localObjects[start]);
     } else if (objectCount == 2) {
         if (comparator(localObjects[start], localObjects[start + 1])) {
-            m_left  = std::make_shared<Wrapper>(localObjects[start]);
-            m_right = std::make_shared<Wrapper>(localObjects[start + 1]);
+            m_left  = std::make_shared<Instance>(localObjects[start]);
+            m_right = std::make_shared<Instance>(localObjects[start + 1]);
         } else {
-            m_left  = std::make_shared<Wrapper>(localObjects[start + 1]);
-            m_right = std::make_shared<Wrapper>(localObjects[start]);
+            m_left  = std::make_shared<Instance>(localObjects[start + 1]);
+            m_right = std::make_shared<Instance>(localObjects[start]);
         }
     } else {
         std::sort(

@@ -11,8 +11,8 @@ public:
 
     Vec3f at(Float t) const;
 
-    const Vec3f origin;
-    const Vec3f direction;
+    Vec3f origin;
+    Vec3f direction;
 };
 
 std::string toString(const Ray& ray);

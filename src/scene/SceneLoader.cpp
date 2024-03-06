@@ -16,6 +16,7 @@
 #include "geometry/Sphere.h"
 #include "geometry/Quad.h"
 #include "geometry/Box.h"
+#include "geometry/Instance.h"
 
 namespace lm {
 
@@ -125,25 +126,50 @@ void SceneLoader::processMaterials(const kc::json::Node& root) {
 void SceneLoader::processObjects(const kc::json::Node& root) {
     LOG_INFO("Processing objects");
     processFields(root, [&](const Record& r) {
-        if (r.type == "sphere") {
-            const auto position     = getField<Vec3f>(r.object, "position");
-            const auto radius       = getField<Float>(r.object, "radius");
-            const auto materialName = getField<std::string>(r.object, "material");
-            const auto material     = m_scene->getMaterial(materialName);
-            m_scene->addObject<Sphere>(r.name, position, radius, material);
-        } else if (r.type == "quad") {
-            const auto origin       = getField<Vec3f>(r.object, "origin");
-            const auto u            = getField<Vec3f>(r.object, "u");
-            const auto v            = getField<Vec3f>(r.object, "v");
-            const auto materialName = getField<std::string>(r.object, "material");
-            const auto material     = m_scene->getMaterial(materialName);
-            m_scene->addObject<Quad>(r.name, origin, u, v, material);
-        } else if (r.type == "box") {
-            const auto min          = getField<Vec3f>(r.object, "min");
-            const auto max          = getField<Vec3f>(r.object, "max");
-            const auto materialName = getField<std::string>(r.object, "material");
-            const auto material     = m_scene->getMaterial(materialName);
-            m_scene->addObject<Box>(r.name, min, max, material);
+        LOG_TRACE("\tProcessing object: {}", r.type);
+
+        auto createObject = [&]() -> Intersectable* {
+            if (r.type == "sphere") {
+                const auto position = getField<Vec3f>(r.object, "position");
+                const auto radius   = getField<Float>(r.object, "radius");
+                const auto materialName =
+                  getField<std::string>(r.object, "material");
+                const auto material = m_scene->getMaterial(materialName);
+                return m_scene->createObject<Sphere>(
+                  r.name, position, radius, material
+                );
+            } else if (r.type == "quad") {
+                const auto origin = getField<Vec3f>(r.object, "origin");
+                const auto u      = getField<Vec3f>(r.object, "u");
+                const auto v      = getField<Vec3f>(r.object, "v");
+                const auto materialName =
+                  getField<std::string>(r.object, "material");
+                const auto material = m_scene->getMaterial(materialName);
+                return m_scene->createObject<Quad>(r.name, origin, u, v, material);
+            } else if (r.type == "box") {
+                const auto min = getField<Vec3f>(r.object, "min");
+                const auto max = getField<Vec3f>(r.object, "max");
+                const auto materialName =
+                  getField<std::string>(r.object, "material");
+                const auto material = m_scene->getMaterial(materialName);
+                return m_scene->createObject<Box>(r.name, min, max, material);
+            }
+            return nullptr;
+        };
+        const auto name = fmt::format("Instance_{}", r.name);
+        auto object     = createObject();
+        ASSERT(object, "Could not process object");
+        auto instance = m_scene->addObject<Instance>(name, object);
+
+        for (auto transform : r.object["transforms"]) {
+            const auto type  = transform.getMemberNames()[0];
+            const auto value = getField<Vec3f>(transform, type);
+            LOG_TRACE("\tTransform: {} - {}", type, value);
+
+            if (type == "translate")
+                instance->addTransform<Translate>(value);
+            else if (type == "rotation")
+                instance->addTransform<Rotation>(value);
         }
     });
 }

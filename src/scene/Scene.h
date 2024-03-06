@@ -33,12 +33,20 @@ public:
     }
 
     template <typename T, typename... Args>
-    void addObject(const std::string& name, Args&&... args) {
+    T* addObject(const std::string& name, Args&&... args) {
         m_objects.emplace(name, std::make_shared<T>(std::forward<Args>(args)...));
         m_world.add(m_objects[name].get());
+        return static_cast<T*>(m_objects[name].get());
+    }
+
+    template <typename T, typename... Args>
+    T* createObject(const std::string& name, Args&&... args) {
+        m_objects.emplace(name, std::make_shared<T>(std::forward<Args>(args)...));
+        return static_cast<T*>(m_objects[name].get());
     }
 
     Texture* getTexture(const std::string& name) { return m_textures[name].get(); }
+
     Material* getMaterial(const std::string& name) {
         return m_materials[name].get();
     }

@@ -4,11 +4,11 @@
 #include <kc/math/Utils.hpp>
 
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
 
 namespace lm {
 
 using namespace kc::math;
-
 using namespace glm;
 
 using Vec2f = vec2;
